@@ -58,6 +58,7 @@ function getAscending(list) {
     // Inisialisasi variabel pembanding
     var compare = false;
     while (!compare) {
+        // Apabila sudah selesai sort (if -> false, compare -> true), while berhenti dijalankan
         compare = true;
         for (let i = 1; i < list.length; i++) {
             // Bandingkan dengan value pada index sebelumnya
@@ -76,4 +77,38 @@ function getAscending(list) {
         }
     }
     return (list);
+}
+
+// Soal 5 - Constructor Person(name, date)
+function Person(name, date) {
+    this.name = name;
+    this.date = date;
+
+    this.getName = function () {
+        return ("Halo saya adalah " + this.name);
+    };
+
+    this.getAge = function () {
+        // Parsing tahun - bulan - tanggal
+        this.year = Number(this.date.substr(0, 4)); // Index ke 0 sebanyak 4 digit
+        this.month = Number(this.date.substr(5, 2)); // Index ke 5 sebanyak 2 digit
+        this.date = Number(this.date.substr(8, 2)); // Index ke 8 sebanyak 2 digit
+
+        // Mengambil waktu terkini untuk perhitungan
+        var today = new Date();
+
+        // Menghitung usia
+        this.age = today.getFullYear() - this.year;
+
+        // Handling apabila belum ulang tahun alias kondisi sbb:
+        // 1. Bulan lahir > bulan saat ini
+        // 2. Bulan lahir = bulan saat ini & tanggal lahir > tanggal saat ini
+        // getMonth + 1 karena getMonth mempunyai index dari 0-11
+        if (this.month > today.getMonth() + 1 || (this.month == today.getMonth() + 1 && this.date > today.getDate())) {
+            this.age--;
+        }
+
+        // Output
+        return ("Saya berumur " + this.age + " tahun");
+    }
 }
