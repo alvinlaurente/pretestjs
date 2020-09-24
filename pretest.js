@@ -50,3 +50,30 @@ function getMax(list) {
     // Output
     return (max);
 }
+
+// Soal 4 - getAscending(list) - Menggunakan algoritma bubble sort
+function getAscending(list) {
+    // Inisialisasi array untuk output
+    var sort = [];
+    // Inisialisasi variabel pembanding
+    var compare = false;
+    while (!compare) {
+        compare = true;
+        for (let i = 1; i < list.length; i++) {
+            // Bandingkan dengan value pada index sebelumnya
+            if (list[i - 1] > list[i]) {
+                compare = false;
+
+                // Menggunakan temp array pindahkan dulu value index i-1
+                var temp = list[i - 1];
+
+                // Ganti value pada index i-1 dengan value index i
+                list[i - 1] = list[i];
+
+                // Masukkan value index i-1 ke index i (Pertukaran antara i-1 dan i)
+                list[i] = temp;
+            }
+        }
+    }
+    return (list);
+}
