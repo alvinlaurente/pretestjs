@@ -20,21 +20,18 @@ class Binatang {
 
 class Ayam extends Binatang {
   constructor() {
-    super();
-    this.voice = 'kukuruyuk';
+    super('kukuruyuk');
   }
 }
 
 class Anjing extends Binatang {
   constructor() {
-    super();
-    this.voice = 'guguk';
+    super('guguk');
   }
 }
 
 class Kucing extends Binatang {
   constructor() {
-    super();
-    this.voice = 'meong';
+    super('meong');
   }
 }
