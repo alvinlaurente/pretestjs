@@ -3,7 +3,7 @@ class Book {
     this.title = title;
     this.isbn = isbn;
     this.author = author;
-    this.borrowStatus = borrowStatus; // buku false = belum dipinjam
+    this.borrowStatus = borrowStatus; // Set buku belum terpinjam saat objek dibuat
   }
 }
 
@@ -21,8 +21,8 @@ class Person {
 class Member extends Person {
   constructor(name, origin, membership = false, bookBorrowed = 0) {
     super(name, origin);
-    this.membership = membership;
-    this.bookBorrowed = bookBorrowed;
+    this.membership = membership; // Membership belum aktif saat objek dibuat
+    this.bookBorrowed = bookBorrowed; // Set buku yang dipinjam 0 saat objek dibuat
   }
 }
 
@@ -56,20 +56,20 @@ class Librarian extends Person {
           book.borrowStatus = true;
           member.bookBorrowed++;
 
-          return `Buku ${book.title} dipinjam oleh ${member.name}. ${member.name} telah meminjam ${member.bookBorrowed} buku`;
+          return `Buku ${book.title} dipinjam oleh ${member.name}. ${member.name} telah meminjam ${member.bookBorrowed} buku.`;
         }
 
         else {
-          return `Maaf buku ${book.title} tidak dapat dipinjam. ${member.name} sudah meminjam 2 buku`;
+          return `Maaf buku ${book.title} tidak dapat dipinjam. ${member.name} sudah meminjam 2 buku.`;
         }
       }
       else {
-        return `Maaf buku yang ingin anda pinjam tidak tersedia`;
+        return `Maaf buku yang ingin anda pinjam tidak tersedia.`;
       }
     }
 
     else {
-      return `Maaf status member anda belum aktif`;
+      return `Maaf status member ${member.name} belum aktif.`;
     }
   }
 
@@ -80,7 +80,7 @@ class Librarian extends Person {
           member.bookBorrowed--;
           book.borrowStatus = false;
 
-          return `Buku ${book.title} berhasil dikembalikan. Terima kasih ${member.name}. Saat ini anda meminjam ${member.bookBorrowed} buku`;
+          return `Buku ${book.title} berhasil dikembalikan. Terima kasih ${member.name}. Saat ini anda meminjam ${member.bookBorrowed} buku.`;
         }
       }
     }
@@ -91,6 +91,20 @@ let alvin = new Member('Alvin', 'Jogja');
 let ardi = new Member('Ardi', 'Jakarta');
 let alfian = new Librarian('Alfian', 'Bandung');
 let buku1 = new Book('Binar Guidebook', '123456789', 'Binar Academy');
-let buku2 = new Book('HTML for Dummies', '987654321', 'Stephen Hawking');
-let buku3 = new Book('JavaScript for Beginner', '111111111', 'Bill Gates');
-let buku4 = new Book('Easy CSS using Bootstrap 4', '222222222', 'Jack Ma');
+let buku2 = new Book('HTML for Dummies', '987654321', 'Ed Tittel, Stephen J. James');
+let buku3 = new Book('JavaScript: The Definitive Guide', '111111111', 'David Flanagan');
+let buku4 = new Book('Bootstrap 4 Quick Start: Responsive Web Design and Development Basics for Beginners (Bootstrap 4 Tutorial Book 1)', '222222222', 'Jacob Lett');
+
+console.log(alfian.checkout(buku1, alvin));
+console.log(alfian.activate(alvin));
+console.log(alfian.checkout(buku1, alvin));
+console.log(alfian.checkout(buku2, alvin));
+console.log(alfian.checkout(buku3, alvin));
+console.log(alfian.return(buku1, alvin));
+// console.log(alfian.checkout(buku5, alvin));
+console.log(alfian.checkout(buku4, alvin));
+console.log(alfian.checkout(buku1, ardi));
+console.log(alfian.activate(ardi));
+console.log(alfian.checkout(buku1, ardi));
+console.log(alfian.checkout(buku3, ardi));
+console.log(alfian.return(buku1, ardi));
