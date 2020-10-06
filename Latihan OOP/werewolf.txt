@@ -1,0 +1,11 @@
+Study Case OOP - Werewolf
+
+Sesuai game werewolf. Setiap role mempunyai skill/ability yang bervariasi (pun tidak memiliki skill sama sekali). Dalam study case ini akan terdapat beberapa role yang umum dimainkan yaitu : Werewolf, Guardian, Seer, Villager, dan tentunya Moderator.
+Kondisi :
+1. Seluruh aktifitas hanya dapat dikerjakan saat malam hari.
+2. Pergantian hari dilakukan oleh moderator.
+3. Aktifitas malam hari :
+    - Werewolf : Membunuh 1 orang selain sesama werewolf tiap malam.
+    - Guardian : Melindungi 1 orang dari serangan werewolf setiap malamnya, bisa diri sendiri.
+    - Seer : Mengetahui role 1 orang lain setiap malam.
+    - Villager : tidak memiliki aktifitas
