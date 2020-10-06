@@ -87,6 +87,8 @@ class Librarian extends Person {
   }
 }
 
+
+// Object Declaration
 let alvin = new Member('Alvin', 'Jogja');
 let ardi = new Member('Ardi', 'Jakarta');
 let alfian = new Librarian('Alfian', 'Bandung');
@@ -95,16 +97,17 @@ let buku2 = new Book('HTML for Dummies', '987654321', 'Ed Tittel, Stephen J. Jam
 let buku3 = new Book('JavaScript: The Definitive Guide', '111111111', 'David Flanagan');
 let buku4 = new Book('Bootstrap 4 Quick Start: Responsive Web Design and Development Basics for Beginners (Bootstrap 4 Tutorial Book 1)', '222222222', 'Jacob Lett');
 
+// Console.log testing
 console.log(alfian.checkout(buku1, alvin));
 console.log(alfian.activate(alvin));
 console.log(alfian.checkout(buku1, alvin));
 console.log(alfian.checkout(buku2, alvin));
 console.log(alfian.checkout(buku3, alvin));
 console.log(alfian.return(buku1, alvin));
-// console.log(alfian.checkout(buku5, alvin));
 console.log(alfian.checkout(buku4, alvin));
 console.log(alfian.checkout(buku1, ardi));
 console.log(alfian.activate(ardi));
 console.log(alfian.checkout(buku1, ardi));
 console.log(alfian.checkout(buku3, ardi));
 console.log(alfian.return(buku1, ardi));
+console.log(alfian.checkout(buku5, ardi));
