@@ -1,11 +1,25 @@
 Study Case OOP - Werewolf
 
-Sesuai game werewolf. Setiap role mempunyai skill/ability yang bervariasi (pun tidak memiliki skill sama sekali). Dalam study case ini akan terdapat beberapa role yang umum dimainkan yaitu : Werewolf, Guardian, Seer, Villager, dan tentunya Moderator.
+Sesuai game werewolf. Setiap role mempunyai skill/ability yang bervariasi (pun tidak memiliki skill sama sekali). Dalam study case ini akan terdapat beberapa role yang umum dimainkan yaitu : Werewolf, Guardian, Seer, Villager, dan tentunya juga ada Moderator. Ada objek tambahan yaitu waktu (Time). Selain role, dibagi juga tim yang nantinya berguna untuk mengetahui tim mana yang menang. Namun, hal tersebut terlalu rumit, jadi pembagian tim hanya akan membuat Werewolf tidak membunuh sesama Werewolf. Moderator dapat melakukan pergantian waktu, layaknya seperti pada gamenya.
+
+Object Class :
+Player memiliki property (name, role, team, alive = true, guarded = false)
+Werewolf , Guardian,  Seer, dan Villager extend ke Player. role sesuai nama class. team dibagi 2 yaitu :  village dan werewolf
+Moderator tidak memiliki property. Hanya sebagai pengatur waktu.
+Time memiliki property(time = "day")
+
 Kondisi :
-1. Seluruh aktifitas hanya dapat dikerjakan saat malam hari.
-2. Pergantian hari dilakukan oleh moderator.
-3. Aktifitas malam hari :
-    - Werewolf : Membunuh 1 orang selain sesama werewolf tiap malam.
-    - Guardian : Melindungi 1 orang dari serangan werewolf setiap malamnya, bisa diri sendiri.
-    - Seer : Mengetahui role 1 orang lain setiap malam.
-    - Villager : tidak memiliki aktifitas
+1. Seluruh aktivitas hanya dapat dikerjakan saat malam hari (time = "night").
+2. Pergantian hari (siang-malam) dilakukan oleh Moderator → setTime(time, cycle)
+3. Aktivitas yang dapat dilakukan pada malam hari :
+Werewolf : Membunuh 1 orang selain sesama werewolf tiap malam → kill(time, name). Hal yang perlu di handle adalah : cek waktu sudah malam, cek nama yang ingin dibunuh masih hidup, cek apakah nama yang ingin dibunuh merupakan tim village, cek apakah nama yang ingin di bunuh sedang tidak memiliki status guard.
+Guardian : Melindungi 1 orang dari serangan werewolf setiap malamnya, bisa diri sendiri → guard(time, name). Hal yang perlu di handle adalah : cek waktu sudah malam, cek nama yang ingin dilindungi masih hidup.
+Seer : Mengetahui role 1 orang lain setiap malam → see(time, name). Hal yang perlu di handle adalah : cek waktu sudah malam, cek nama yang ingin diterawang masih hidup.
+Villager : tidak memiliki aktivitas.
+4. Aktivitas tambahan pada player → setUnguarded(time)untuk menghilangkan status guard hilang saat siang hari.
+
+Tambahan (belum diimplementasikan) :
+	player memiliki method Vote(time, name) yang dapat dilakukan saat siang hari dan pada saat moderator menyatakan memulai voting time untuk menggantung player (lynch). Player juga memiliki properti tambahan yaitu statusVote untuk penanda bahwa dia sudah melakukan vote (tidak dapat melakukan lebih dari 1 vote di satu voting time, nantinya akan direset kembali setelah voting selesai dilakukan) dan property voted sebagai jumlah vote yang dimiliki saat voting time (akan direset juga nantinya menjadi 0).
+Seharusnya pengaturan waktu (objek time) digantikan oleh objek yang bernama game. Game memiliki properti votingStatus untuk menentukan bahwa kondisi game saat ini berada di voting time atau tidak, winner untuk diisi pemenang, end sebagai kondisi permainan telah selesai atau belum.
+	Ada function resetVoteStatus() yang dijalankan saat voting selesai dilakukan. Yang di reset adalah properti voted dan statusVote. Terdapat juga fungsi countWerewolfAlive() dan countVillagerAlive() untuk menghitung berapa banyak pemain yang masih hidup dari setiap tim. Ada juga fungsi lynch() yang dijalankan saat voting selesai dilakukan yang merupakan fungsi untuk menggantung pemain yang memiliki paling banyak vote, apabila terdapat lebih dari 1 pemain yg memiliki jumlah vote yang sama, tidak ada yang digantung. Ada fungsi whoWin() untuk mencari tim mana yang menang berdasarkan hasil yang didapat dari fungsi countWerewolfAlive() dan fungsi countVillagerAlive() sekaligus juga membuat properti end pada obyek game menjadi true apabila sudah ditemukan pemenang dari game tersebut (game sudah selesai). Fungsi ini dijalankan saat hari telah siang hari dan sesaat setelah lynch() dilakukan.
+	Moderator memiliki method tambahan yaitu startVoting() untuk memulai voting time, beserta method endVoting() untuk memberhentikan voting sekaligus menjalankan fungsi lynch(), resetVoteStatus(), whoWin(), dan setTime(‘night’).
