@@ -10,7 +10,7 @@ function refreshVoteStatus() {
 function countImpostorAlive() {
   let counter = 0;
   for (let i = 0; i < players.length; i++) {
-    if (players[i].role === "impostor" && players[i].alive === true) {
+    if (players[i].role === "impostor" && players[i].alive) {
       counter++;
     }
   }
@@ -22,7 +22,7 @@ function countImpostorAlive() {
 function countCrewmateAlive() {
   let counter = 0;
   for (let i = 0; i < players.length; i++) {
-    if (players[i].role === "crewmate" && players[i].alive === true) {
+    if (players[i].role === "crewmate" && players[i].alive) {
       counter++;
     }
   }
@@ -58,64 +58,58 @@ function eject() {
   let eject = getIndex[0];
   // If getIndex = [], eject no one
   if (getIndex.length === 0) {
+
     return `No one was ejected! ${countImpostorAlive()} impostor(s) remains.`;
   } else {
     // Set ejected player => dead
     players[eject].alive = false;
     // Check if ejected player is impostor or crewmate
     if (players[eject].role === "impostor") {
-      return `${
-        players[eject].name
-      } was an Impostor! ${countImpostorAlive()} impostor(s) remains.`;
-    } else {
-      return `${
-        players[eject].name
-      } was not the Impostor! ${countImpostorAlive()} impostor(s) remains`;
+      return `${players[eject].name} was an Impostor! ${countImpostorAlive()} impostor(s) remains.`;
     }
+
+    return `${players[eject].name} was not the Impostor! ${countImpostorAlive()} impostor(s) remains`;
   }
 }
 
 // Check who win the game
 function whoWin() {
-  let winner = null;
   if (countImpostorAlive() === 0) {
-    winner = "Crewmate";
-    return winner;
-  } else if (countImpostorAlive() === countCrewmateAlive()) {
-    winner = "Impostor";
-    return winner;
-  } else if (countCrewmateAlive() >= countImpostorAlive()) {
-    winner = null;
-    return winner;
+    return "Crewmate";
+  }
+  
+  if (countImpostorAlive() === countCrewmateAlive()) {
+    return "Impostor";
+  }
+  
+  if (countCrewmateAlive() >= countImpostorAlive()) {
+    return null;
   }
 }
 
 class Game {
-  constructor(
-    meetingStatus = false,
-    votingStatus = false,
-    winner = null,
-    end = false
-  ) {
-    this.meetingStatus = meetingStatus; // Emergency Meeting or Report meeting
-    this.votingStatus = votingStatus; // Voting time to eject player
-    this.winner = winner; // Store winner of the game
-    this.end = end; // If end = true => Game has ended
+  constructor() {
+    this.meetingStatus = false; // Emergency Meeting or Report meeting
+    this.votingStatus = false; // Voting time to eject player
+    this.winner = null; // Store winner of the game
+    this.end = false; // If end = true => Game has ended
   }
 
   endMeeting() {
-    if (this.meetingStatus === true) {
+    if (this.meetingStatus) {
       this.meetingStatus = false;
       console.log(`Meeting is done. Begin voting...`);
+
       return this.voting();
-    } else {
-      return `It's not meeting time`;
     }
+
+    return `It's not meeting time`;
   }
 
   voting() {
-    if (this.meetingStatus === false && this.votingStatus === false) {
+    if (!this.meetingStatus && !this.votingStatus) {
       this.votingStatus = true;
+
       return `Begin voting!`;
     }
   }
@@ -131,10 +125,11 @@ class Game {
       this.end = true;
       // Store the game winner
       this.winner = whoWin();
+
       return `${msg}. ${this.winner} WIN`;
-    } else {
-      return `${msg}`;
     }
+
+    return `${msg}`;
   }
 
   endByKilling() {
@@ -143,128 +138,125 @@ class Game {
       this.end = true;
       // Store the game winner
       this.winner = whoWin();
+
       return `${this.winner} WIN by killing crewmates!`;
     }
   }
 }
 
 class Player {
-  constructor(
-    name,
-    role, // Impostor or Crewmate
-    alive = true, // False => dead
-    meetingChance = 1, // Only 1 chance per player to do emergency meeting
-    voteStatus = true, // Toggle to vote players when voting time
-    voted = 0 // Count how many this.player get voted when voting time
-  ) {
+  constructor(name,role) {
     this.name = name;
-    this.role = role;
-    this.alive = alive;
-    this.meetingChance = meetingChance;
-    this.voteStatus = voteStatus;
-    this.voted = voted;
+    this.role = role; // Impostor or Crewmate
+    this.alive = true; // False => dead
+    this.meetingChance = 1; // Only 1 chance per player to do emergency meeting
+    this.voteStatus = true; // Toggle to vote players when voting time
+    this.voted = 0; // Count how many this.player get voted when voting time
   }
 
   // Both impostors and crewmates can call Emergency Meeting once
   emergencyMeeting(game) {
     // Check if the game hasn't ended yet
-    if (game.end === false) {
+    if (!game.end) {
       // Check if this.player still alive
-      if (this.alive === true) {
+      if (this.alive) {
         // Check this.player meeting chance left
         if (this.meetingChance === 1) {
           game.meetingStatus = true;
           this.meetingChance = null; // No more chance to call meeting for this.player
+
           return `${this.name} calls EMERGENCY MEETING!`;
-        } else {
-          return `Can't do meeting! ${this.name} has no chance left!`;
         }
-      } else {
-        return `Can't do meeting! ${this.name} has already dead.`;
+
+        return `Can't do meeting! ${this.name} has no chance left!`;
       }
-    } else {
-      return `Game has ended.`;
+      
+      return `Can't do meeting! ${this.name} has already dead.`;
     }
+
+    return `Game has ended.`;
   }
 
   // Vote to eject players
   vote(game, name) {
     // Check if the game hasn't ended yet
-    if (game.end === false) {
+    if (!game.end) {
       // Check game voting time status
-      if (game.votingStatus === true) {
+      if (game.votingStatus) {
         // Check if this.player still alive
-        if (this.alive === true) {
+        if (this.alive) {
           // Check if voted player still alive
-          if (name.alive === true) {
+          if (name.alive) {
             // Check if this.player hasn't vote yet in this voting time
             if (this.voteStatus === true) {
               name.voted++; // Counter of voted player
               this.voteStatus = false; // Make this.player can't vote again in this voting time
+
               return `${this.name} votes ${name.name}`;
-            } else {
-              return `Can't vote! ${this.name} has no vote chance left!`;
             }
-          } else {
-            return `Can't vote! ${name.name} has already dead!`;
+
+            return `Can't vote! ${this.name} has no vote chance left!`;
           }
-        } else {
-          return `Can't vote! ${this.name} has already dead!`;
+
+          return `Can't vote! ${name.name} has already dead!`;
         }
-      } else {
-        return `Can't vote! It's not voting time.`;
+
+        return `Can't vote! ${this.name} has already dead!`;
       }
-    } else {
-      return `Game has ended.`;
+          
+      return `Can't vote! It's not voting time.`;
     }
+
+    return `Game has ended.`;
   }
 }
 
 class Impostor extends Player {
-  constructor(name, role = "impostor", alive, meetingChance, voteStatus) {
-    super(name, role, alive, meetingChance, voteStatus);
+  constructor(name, alive, meetingChance, voteStatus) {
+    super(name, "impostor", alive, meetingChance, voteStatus);
   }
 
   // Impostor can kill crewmate
   kill(game, name) {
     // Check if the game hasn't ended yet
-    if (game.end === false) {
+    if (!game.end) {
       // Check if game is not in meeting or voting time
-      if (game.meetingStatus === false && game.votingStatus === false) {
+      if (!game.meetingStatus && !game.votingStatus) {
         // Check if this.player still alive
-        if (this.alive === true) {
+        if (this.alive) {
           // Check if player's role who want to be killed is crewmate
           if (name.role === "crewmate") {
             // Check if player who want to be killed is still alive
-            if (name.alive === true) {
+            if (name.alive) {
               name.alive = false; // kill
               // check if impostor win or not
               if (whoWin() === "Impostor") {
+
                 return game.endByKilling();
-              } else {
-                return `${this.name} kills ${name.name}.`;
               }
-            } else {
-              return `${name.name} has already dead.`;
+              
+              return `${this.name} kills ${name.name}.`;
             }
-          } else {
-            return `Impostor only can kill crewmate!`;
+            
+            return `${name.name} has already dead.`;
           }
-        } else {
-          return `${this.name} has already dead.`;
+
+          return `Impostor only can kill crewmate!`;
         }
-      } else {
-        return `Still meeting, can't kill right now!`;
+        
+        return `${this.name} has already dead.`;
       }
-    } else {
-      return `Game has ended.`;
+      
+      return `Still meeting, can't kill right now!`;
     }
+    
+    return `Game has ended.`;
   }
 }
 
 class Crewmate extends Player {
-  constructor(name, role = "crewmate", alive, meetingChance, voteStatus) {
-    super(name, role, alive, meetingChance, voteStatus);
+  constructor(name, alive, meetingChance, voteStatus) {
+    super(name, "crewmate", alive, meetingChance, voteStatus);
   }
 }
 
